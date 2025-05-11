@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PoliBest калькулятор</title>
+  <style>
+    :root {
+      --main-red: #b52a20;
+      --accent-red: #a61f1f;
+      --light-bg: #f4f4f9;
+      --container-bg: #ffffff;
+      --text-color: #000000;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: var(--light-bg);
+      color: var(--text-color);
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: var(--container-bg);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--main-red);
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--main-red);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: var(--accent-red);
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .top-bar button {
+      flex: 1;
+      min-width: 100px;
+    }
+
+    .lac-type-selector {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .lac-type-selector button {
+      flex: 1;
+      background-color: var(--main-red);
+    }
+
+    .lac-type-selector button.active {
+      background-color: var(--accent-red);
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 16px;
+    }
+
+    @media (max-width: 480px) {
+      label {
+        font-size: 0.95rem;
+      }
+
+      input[type="number"] {
+        font-size: 1rem;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-bar">
+      <button onclick="toggleDryScreed()" id="dryScreedBtn">Суха стяжка: Вимкнено</button>
+      <button onclick="switchLanguage('uk')">🇺🇦 Українська</button>
+      <button onclick="switchLanguage('ru')">🇷🇺 Русский</button>
+    </div>
+
+    <h1 id="heading">Розрахунок витрат матеріалів</h1>
+    <label id="areaLabel" for="area">Площа (м²):</label>
+    <input type="number" id="area" placeholder="Введіть площу" oninput="calculate()" />
+
+    <div class="lac-type-selector">
+      <button id="glossyBtn" onclick="setLacType('glossy')">Глянцевий лак</button>
+      <button id="matteBtn" onclick="setLacType('matte')">Матовий лак</button>
+    </div>
+
+    <button onclick="calculate()" id="calculateButton">Розрахувати</button>
+    <div class="result" id="result"></div>
+    <button onclick="copyResult()">📋 Копіювати результат</button>
+  </div>
+
+  <script>
+    const translations = {
+      uk: {
+        heading: "Розрахунок витрат матеріалів",
+        areaLabel: "Площа (м²):",
+        calculateButton: "Розрахувати",
+        alertMessage: "Будь ласка, введіть коректну площу!",
+        glossy: "Глянцевий лак",
+        matte: "Матовий лак",
+        copySuccess: "Скопійовано!",
+        glossyText: "Глянцевий",
+        matteText: "Матовий",
+        resultTitle: "Результати розрахунку:",
+        dryScreedOn: "Суха стяжка: Увімкнено",
+        dryScreedOff: "Суха стяжка: Вимкнено"
+      },
+      ru: {
+        heading: "Расчет затрат материалов",
+        areaLabel: "Площадь (м²):",
+        calculateButton: "Рассчитать",
+        alertMessage: "Пожалуйста, введите корректную площадь!",
+        glossy: "Глянцевый лак",
+        matte: "Матовый лак",
+        copySuccess: "Скопировано!",
+        glossyText: "Глянцевый",
+        matteText: "Матовый",
+        resultTitle: "Результаты расчета:",
+        dryScreedOn: "Сухая стяжка: Включено",
+        dryScreedOff: "Сухая стяжка: Выключено"
+      }
+    };
+
+    let currentLanguage = 'uk';
+    let lacType = 'glossy';
+    let dryScreed = false;
+
+    function switchLanguage(lang) {
+      currentLanguage = lang;
+      const t = translations[lang];
+      document.getElementById("heading").textContent = t.heading;
+      document.getElementById("areaLabel").textContent = t.areaLabel;
+      document.getElementById("calculateButton").textContent = t.calculateButton;
+      document.getElementById("glossyBtn").textContent = t.glossy;
+      document.getElementById("matteBtn").textContent = t.matte;
+      document.getElementById("dryScreedBtn").textContent = dryScreed ? t.dryScreedOn : t.dryScreedOff;
+      calculate();
+    }
+
+    function setLacType(type) {
+      lacType = type;
+      document.getElementById('glossyBtn').classList.toggle('active', type === 'glossy');
+      document.getElementById('matteBtn').classList.toggle('active', type === 'matte');
+      calculate();
+    }
+
+    function toggleDryScreed() {
+      dryScreed = !dryScreed;
+      const btn = document.getElementById('dryScreedBtn');
+      btn.textContent = dryScreed ? translations[currentLanguage].dryScreedOn : translations[currentLanguage].dryScreedOff;
+      calculate();
+    }
+
+    function calculate() {
+      const area = parseFloat(document.getElementById('area').value);
+      const resultDiv = document.getElementById('result');
+      if (isNaN(area) || area <= 0) {
+        resultDiv.innerHTML = `<div style="color:red;">${translations[currentLanguage].alertMessage}</div>`;
+        return;
+      }
+
+      const emalPrice = 1260;
+      const flokiPrice = 1350;
+      const glossyLakPrice = 1440;
+      const matteLakPrice = 1800;
+      const grundPrice = 720;
+
+      const emalTotalKg = Math.ceil(area * 0.2);
+      const flokiTotalKg = Math.ceil(area * 0.025 * 20) / 20;
+      const lakTotalKg = Math.ceil(area * 0.12);
+      const grundTotalKg = dryScreed ? Math.ceil(area * 0.2) : 0;
+
+      const lakPrice = lacType === 'glossy' ? glossyLakPrice : matteLakPrice;
+
+      const emalTotal = emalTotalKg * emalPrice;
+      const flokiTotal = flokiTotalKg * flokiPrice;
+      const lakTotal = lakTotalKg * lakPrice;
+      const grundTotal = grundTotalKg * grundPrice;
+
+      const totalSum = emalTotal + flokiTotal + lakTotal + grundTotal;
+      const lang = translations[currentLanguage];
+
+      let resultHTML = `<div><strong>${lang.resultTitle}</strong></div>`;
+      if (dryScreed) {
+        resultHTML += `<div><strong>Грунтівка:</strong> ${grundTotalKg} кг × ${grundPrice} = ${grundTotal} грн</div>`;
+      }
+      resultHTML += `
+        <div><strong>Емаль:</strong> ${emalTotalKg} кг × ${emalPrice} = ${emalTotal} грн</div>
+        <div><strong>Флоки:</strong> ${flokiTotalKg} кг × ${flokiPrice} = ${flokiTotal} грн</div>
+        <div><strong>Лак (${lacType === 'glossy' ? lang.glossyText : lang.matteText}):</strong> ${lakTotalKg} кг × ${lakPrice} = ${lakTotal} грн</div>
+        <div><strong>Загальна сума:</strong> ${totalSum} грн</div>
+        <div><strong>Ціна за м²:</strong> ${(totalSum / area).toFixed(2)} грн/м²</div>
+      `;
+
+      resultDiv.innerHTML = resultHTML;
+    }
+
+    function copyResult() {
+      const text = document.getElementById('result').innerText;
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert(translations[currentLanguage].copySuccess);
+        });
+      } else {
+        alert("Ваш браузер не підтримує копіювання.");
+      }
+    }
+
+    switchLanguage(currentLanguage);
+  </script>
+</body>
+</html>
