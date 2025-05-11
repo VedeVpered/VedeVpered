@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PoliBest калькулятор</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f9;
+      color: #000;
+      margin: 0;
+      padding: 10px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    h1 {
+      color: #b52a20;
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+
+    label {
+      font-weight: bold;
+      margin-bottom: 8px;
+      display: block;
+      font-size: 1rem;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 14px 12px;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      background: #b52a20;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background: #a61f1f;
+    }
+
+    .row, .lac-type, .lang-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .row button, .lac-type button, .lang-row button {
+      flex: 1;
+      font-size: 14px;
+      padding: 10px;
+    }
+
+    .active::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: white;
+      position: absolute;
+      left: 10px;
+    }
+
+    .lac-type { display: none; }
+    .result { margin-top: 20px; font-size: 1rem; }
+
+    @media (max-width: 480px) {
+      h1 { font-size: 1.3rem; }
+      label { font-size: 0.95rem; }
+      input[type="number"] { font-size: 1rem; }
+      .row button, .lac-type button { font-size: 0.9rem; padding: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <button id="flokiBtn" onclick="selectMode('floki')">✨ Флоки</button>
+      <button id="screedBtn" onclick="toggleScreed()">🧱 Суха стяжка</button>
+      <button id="emalBtn" onclick="selectMode('emal')">🧴 Емаль</button>
+      <button id="paintBtn" onclick="selectMode('paint')">🎨 Фарба</button>
+    </div>
+
+    <h1 id="title">Розрахунок витрат матеріалів</h1>
+    <label id="areaLabel" for="area">Площа (м²):</label>
+    <input type="number" id="area" placeholder="Введіть площу" oninput="calculate()" />
+
+    <div class="lac-type" id="lacButtons">
+      <button id="glossyBtn" onclick="selectLac('glossy')">Глянцевий лак</button>
+      <button id="matteBtn" onclick="selectLac('matte')">Матовий лак</button>
+    </div>
+
+    <div class="result" id="result"></div>
+
+    <div class="lang-row">
+      <button onclick="switchLang('uk')">🇺🇦</button>
+      <button onclick="switchLang('ru')">🇷🇺</button>
+    </div>
+  </div>
+</body>
+</html>
