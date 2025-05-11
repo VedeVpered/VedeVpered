@@ -1,15 +1,16 @@
 
 <!DOCTYPE html>
+
 <html lang="uk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PoliBest калькулятор</title>
-  <link rel="icon" href="icon-192.png" type="image/png" />
-  <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#b52a20" />
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PoliBest калькулятор</title>
+<link href="icon-192.png" rel="icon" type="image/png"/>
+<link href="icon-192.png" rel="apple-touch-icon" sizes="192x192"/>
+<link href="manifest.json" rel="manifest"/>
+<meta content="#b52a20" name="theme-color"/>
+<style>
     body { font-family: Arial; padding: 20px; background: #f4f4f9; color: #000; }
     .container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 10px; }
     h1 { color: #b52a20; text-align: center; }
@@ -23,28 +24,24 @@
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="row">
-      <button onclick="toggleDryScreed()" id="dryScreedBtn">Суха стяжка: Вимкнено</button>
-      <button onclick="switchLanguage('uk')">🇺🇦 Українська</button>
-      <button onclick="switchLanguage('ru')">🇷🇺 Русский</button>
-    </div>
-
-    <h1 id="heading">Розрахунок витрат матеріалів</h1>
-    <label id="areaLabel" for="area">Площа (м²):</label>
-    <input type="number" id="area" placeholder="Введіть площу" oninput="calculate()" />
-
-    <div class="row">
-      <button id="glossyBtn" onclick="setLacType('glossy')">Глянцевий лак</button>
-      <button id="matteBtn" onclick="setLacType('matte')">Матовий лак</button>
-    </div>
-
-    <button onclick="calculate()" id="calculateButton">Розрахувати</button>
-    <div class="result" id="result"></div>
-    <button onclick="copyResult()">📋 Копіювати результат</button>
-  </div>
-
-  <script>
+<div class="container">
+<div class="row">
+<button id="dryScreedBtn" onclick="toggleDryScreed()">Суха стяжка: Вимкнено</button>
+<button onclick="switchLanguage('uk')">🇺🇦 Українська</button>
+<button onclick="switchLanguage('ru')">🇷🇺 Русский</button>
+</div>
+<h1 id="heading">Розрахунок витрат матеріалів</h1>
+<label for="area" id="areaLabel">Площа (м²):</label>
+<input id="area" oninput="calculate()" placeholder="Введіть площу" style="font-size:1.1rem; padding:14px; max-width:100%; font-size:1.1rem; padding:14px;" type="number"/>
+<div class="row">
+<button id="glossyBtn" onclick="setLacType('glossy')">Глянцевий лак</button>
+<button id="matteBtn" onclick="setLacType('matte')">Матовий лак</button>
+</div>
+<button id="calculateButton" onclick="calculate()">Розрахувати</button>
+<div class="result" id="result"></div>
+<button onclick="copyResult()">📋 Копіювати результат</button>
+</div>
+<script>
     const translations = {
       uk: {
         heading: "Розрахунок витрат матеріалів",
